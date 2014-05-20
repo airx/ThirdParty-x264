@@ -294,6 +294,7 @@ chroma_format="all"
 compiler="GNU"
 compiler_style="GNU"
 opencl="yes"
+libm=""
 
 CFLAGS="$CFLAGS -Wall -I. -I\$(SRCPATH)"
 LDFLAGS="$LDFLAGS"
@@ -432,6 +433,9 @@ for opt do
                 exit 1
             fi
             ;;
+        --libm=*)
+            libm="$optarg"
+            ;;
         *)
             echo "Unknown option $opt, ignored"
             ;;
@@ -499,7 +503,6 @@ if [[ "$cc_base" = clang || "$cc_base" = clang[\ .]* ]]; then
     fi
 fi
 
-libm=""
 case $host_os in
     beos*)
         SYS="BEOS"
@@ -532,7 +535,7 @@ case $host_os in
     *linux*)
         SYS="LINUX"
         define HAVE_MALLOC_H
-        libm="-lm"
+        [ -z "$libm" ] && libm="-lm"
         ;;
     gnu*)
         SYS="HURD"
